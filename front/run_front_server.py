@@ -20,6 +20,7 @@ app.config.update(
 
 def get_prediction(original_title):
     body = {'original_title': original_title}
+    print(body)
 
     myurl = "http://localhost:5000/predict"
     req = urllib.request.Request(myurl)
@@ -38,8 +39,7 @@ def index():
 
 @app.route('/predicted/<response>')
 def predicted(response):
-    response = json.loads(response)
-    print(response)
+    #response = json.loads(response)
     return render_template('predicted.html', response=response)
 
 
@@ -49,10 +49,8 @@ def predict_form():
     data = dict()
     if request.method == 'POST':
         data['original_title'] = request.form.get('original_title')
-
         try:
             response = str(get_prediction(data['original_title']))
-            print(response)
         except ConnectionError:
             response = json.dumps({"error": "ConnectionError"})
         return redirect(url_for('predicted', response=response))
